@@ -2,6 +2,7 @@ import Home from "@/pages/Home";
 import { HomeIcon, LayoutDashboard } from "lucide-react";
 import { sidebarNavigationConfig } from "./sidebarNavigationConfig";
 import { signUpCongfig } from "@/pages/sign-up/routes";
+import { signInRouteConfig } from "@/pages/sign-in/routes";
 
 export const routes = [
   {
@@ -10,6 +11,6 @@ export const routes = [
   },
   {
     layout: "auth",
-    children: [...signUpCongfig],
+    children: [...signUpCongfig, ...signInRouteConfig],
   },
 ];
