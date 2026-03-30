@@ -10,6 +10,7 @@ import { routes } from "./config/routes";
 import AuthLayout from "./layouts/AuthLayout";
 import { useDispatch } from "react-redux";
 import { getCurrent } from "./slices/authSlice";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
   const dispatch = useDispatch();
@@ -34,6 +35,22 @@ function App() {
 
           const layout =
             group?.layout === "main" ? <MainLayout /> : <AuthLayout />;
+
+          if (group.layout === "main") {
+            return (
+              <Route element={<ProtectedRoute />} key={index}>
+                <Route element={layout}>
+                  {group?.children?.map((route) => (
+                    <Route
+                      key={route?.path}
+                      path={route?.path}
+                      element={route?.element}
+                    />
+                  ))}
+                </Route>
+              </Route>
+            );
+          }
 
           return (
             <Route key={index} element={layout}>

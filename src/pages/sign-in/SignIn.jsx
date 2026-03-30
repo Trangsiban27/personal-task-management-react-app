@@ -43,7 +43,9 @@ const SignIn = () => {
     dispatch(login(data)).then((res) => {
       setIsLoading(false);
 
-      navigate("/home", { replace: true });
+      if (res?.payload?.tokens?.accessToken) {
+        navigate("/home", { replace: true });
+      }
     });
   };
 

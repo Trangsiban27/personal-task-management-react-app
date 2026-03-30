@@ -8,8 +8,15 @@ export const login = createAsyncThunk(
 
             const res = await authService.login(data)
 
-            localStorage.setItem('token', res?.metadata?.metadata?.tokens?.accessToken)
-            localStorage.setItem('clientId', res?.metadata?.metadata?.user?._id)
+            if (res?.metadata?.metadata?.tokens?.accessToken) {
+
+                localStorage.setItem('token', res?.metadata?.metadata?.tokens?.accessToken)
+            }
+
+            if (res?.metadata?.metadata?.user?._id) {
+
+                localStorage.setItem('clientId', res?.metadata?.metadata?.user?._id)
+            }
 
             return res?.metadata?.metadata
         } catch (err) {
@@ -28,8 +35,9 @@ export const getCurrent = createAsyncThunk(
             console.log('res: ', res)
             return res
         } catch (err) {
-            return rejectWithValue(err.response?.data)
 
+            localStorage.removeItem("token");
+            return rejectWithValue(err.response?.data)
         }
     }
 )
@@ -38,6 +46,7 @@ export const getCurrent = createAsyncThunk(
 const authSlice = createSlice({
     name: 'auth',
     initialState: {
+        token: localStorage.getItem('token') ?? null,
         user: null,
     },
     reducers: {},
@@ -47,5 +56,7 @@ const authSlice = createSlice({
         })
     }
 })
+
+export const selectAuth = (state) => state.auth;
 
 export default authSlice.reducer
