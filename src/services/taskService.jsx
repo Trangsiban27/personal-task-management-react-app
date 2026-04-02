@@ -12,4 +12,15 @@ export const taskService = {
       console.log("err: ", err);
     }
   },
+
+  updateTaskStatus: async (taskId, status) => {
+    try {
+      console.log("status: ", status);
+      const res = await apiClient.patch(`/task/${taskId}/status`, { status });
+
+      return res?.data;
+    } catch (err) {
+      console.log("err: ", err);
+    }
+  },
 };

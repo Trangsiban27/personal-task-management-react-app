@@ -3,12 +3,19 @@ import Column from "./Column";
 import Item from "./Item";
 import { closestCorners, DndContext } from "@dnd-kit/core";
 import { useDispatch, useSelector } from "react-redux";
-import { getTasks, selectItems, setItem } from "@/slices/taskSlice";
+import {
+  getTasks,
+  selectItems,
+  setItem,
+  updateTaskStatus,
+} from "@/slices/taskSlice";
 import { arrayMove } from "@dnd-kit/sortable";
 
 const TaskTable = () => {
   const dispatch = useDispatch();
   const tasksData = useSelector(selectItems);
+
+  const [currentTask, setCurrentTask] = useState(null);
 
   useEffect(() => {
     dispatch(getTasks({ limit: 10, page: 1 }));
@@ -33,6 +40,10 @@ const TaskTable = () => {
     const activeCol = findColumn(activeId);
     const overCol = findColumn(overId);
 
+    const currentTask = tasksData[activeCol]?.find(
+      (item) => item?._id === activeId,
+    );
+
     if (!activeCol || !overCol || activeCol === overCol) return;
 
     const newItems = {
@@ -49,6 +60,7 @@ const TaskTable = () => {
     newItems[overCol]?.push({ ...movedItem, status: overCol });
 
     dispatch(setItem(newItems));
+    setCurrentTask(currentTask);
   };
 
   const handleDragEnd = (event) => {
@@ -71,7 +83,7 @@ const TaskTable = () => {
         (item) => item?._id === overId,
       );
 
-      if (oldIndex === newIndex) {
+      if (oldIndex !== newIndex) {
         const newItems = {
           ...tasksData,
           [activeCol]: arrayMove(tasksData[activeCol], oldIndex, newIndex),
@@ -82,7 +94,8 @@ const TaskTable = () => {
     }
 
     //case 2: move to other col
-    if (activeCol && overCol && activeCol !== overCol) {
+    if (currentTask?.status !== overCol) {
+      dispatch(updateTaskStatus({ taskId: activeId, status: overCol }));
     }
   };
 

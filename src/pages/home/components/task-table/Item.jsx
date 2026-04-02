@@ -16,7 +16,7 @@ const Item = ({ id, data, index, column }) => {
     <div
       {...attributes}
       {...listeners}
-      className="flex flex-col items-start gap-y-2 border border-gray-300 rounded-lg p-4"
+      className="flex flex-col items-start gap-y-2 border border-gray-300 rounded-lg p-4 cursor-pointer"
       ref={setNodeRef}
       style={style}
     >
