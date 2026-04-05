@@ -7,6 +7,7 @@ import {
   openTaskDialog,
   selectTaskData,
   selectTaskDetailDialog,
+  updateTaskStatus,
 } from "@/slices/taskSlice";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { Field, FieldLabel } from "../ui/field";
@@ -21,6 +22,7 @@ import {
 import { formatDate } from "@/utils/formatDate";
 import { Button } from "../ui/button";
 import { EditIcon } from "lucide-react";
+import { is } from "date-fns/locale";
 
 const TaskDetailPanel = () => {
   const dispatch = useDispatch();
@@ -47,6 +49,15 @@ const TaskDetailPanel = () => {
       });
     }
   }, [taskDialog?.open, taskId]);
+
+  const handleChangeStatus = (value) => {
+    dispatch(
+      updateTaskStatus({
+        taskId: taskData?._id,
+        status: value,
+      }),
+    );
+  };
 
   return (
     <Drawer
@@ -85,8 +96,11 @@ const TaskDetailPanel = () => {
                   Status
                 </FieldLabel>
                 <Select
-                  value={status}
-                  onValueChange={(value) => setStatus(value)}
+                  value={taskData?.status}
+                  onValueChange={(value) => {
+                    setStatus(value);
+                    handleChangeStatus(value);
+                  }}
                 >
                   <SelectTrigger className="w-full max-w-48">
                     <SelectValue placeholder="Select a fruit" />
@@ -109,7 +123,7 @@ const TaskDetailPanel = () => {
                   Priority
                 </FieldLabel>
                 <Select
-                  value={priority}
+                  value={taskData?.priority}
                   onValueChange={(value) => setPriority(value)}
                 >
                   <SelectTrigger className="w-full max-w-48">
