@@ -122,6 +122,7 @@ const taskSlice = createSlice({
         })
         builder.addCase(updateTaskStatus.fulfilled, (state, action) => {
             const newStatus = action.payload?.metadata?.status
+            const oldStatus = state.task?.data?.status
 
             const taskId = action.payload?.metadata?._id
 
@@ -131,6 +132,8 @@ const taskSlice = createSlice({
                 state.tasks[taskIndex].status = newStatus
                 state.items[newStatus].push(state.tasks[taskIndex])
             }
+
+            state.items[oldStatus] = state.items[oldStatus].filter((task) => task._id !== taskId)
 
             state.task.data.status = newStatus
         })
