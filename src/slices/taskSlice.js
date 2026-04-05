@@ -66,6 +66,19 @@ export const updateTaskPriority = createAsyncThunk(
     }
 )
 
+export const updateTask = createAsyncThunk(
+    'task/updateTask',
+    async (task) => {
+        try {
+            const res = await taskService.updateTask(task?.taskId, task?.payload)
+
+            return res
+        } catch (err) {
+            console.log('err: ', err)
+        }
+    }
+)
+
 const taskSlice = createSlice({
     name: 'task',
     initialState: {

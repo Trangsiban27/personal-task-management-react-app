@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   closeTaskDialog,
   getTask,
+  openAddTaskDialog,
   openTaskDialog,
   selectTaskData,
   selectTaskDetailDialog,
@@ -88,6 +89,11 @@ const TaskDetailPanel = () => {
             variant="ghost"
             size="icon"
             className="cursor-pointer h-8 w-8"
+            onClick={() => {
+              navigate(`/home?task=${taskData?._id}&isEdit=true`);
+              dispatch(closeTaskDialog());
+              dispatch(openAddTaskDialog());
+            }}
           >
             <EditIcon size={18} />
           </Button>

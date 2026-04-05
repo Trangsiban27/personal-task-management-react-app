@@ -29,13 +29,15 @@ const Item = ({ id, data, index, column }) => {
       }}
     >
       <div className="flex flex-col items-start">
-        <span className="font-semibold">{data?.title}</span>
+        <span className="font-semibold line-clamp-3 overflow-hidden">
+          {data?.title}
+        </span>
         <span className="text-xs text-gray-500">
           {formatDate(data?.dueDate)}
         </span>
       </div>
 
-      <span className="text-xs text-gray-500 text-left">
+      <span className="text-xs text-gray-500 text-left line-clamp-3 overflow-hidden">
         {data?.description}
       </span>
     </div>

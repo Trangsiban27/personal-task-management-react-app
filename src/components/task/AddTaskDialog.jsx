@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Drawer,
   DrawerClose,
@@ -37,7 +37,10 @@ import {
   closeAddTaskDialog,
   openAddTaskDialog,
   selectAddTaskDialog,
+  selectTaskData,
+  updateTask,
 } from "@/slices/taskSlice";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 const schema = yup.object({
   title: yup.string().required("Title is required"),
@@ -55,10 +58,18 @@ const schema = yup.object({
 
 const AddTaskDialog = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const addTaskDialog = useSelector(selectAddTaskDialog);
+  const taskData = useSelector(selectTaskData);
+
+  const [searchParams] = useSearchParams();
+  const isEdit = searchParams.get("isEdit");
+  const taskId = searchParams.get("task");
+
   const {
     control,
     watch,
+    reset,
     formState: { errors, isValid },
   } = useForm({
     mode: "onChange",
@@ -76,6 +87,26 @@ const AddTaskDialog = () => {
 
   const form = watch();
 
+  useEffect(() => {
+    if (isEdit && taskId) {
+      reset({
+        title: taskData?.title || "",
+        description: taskData?.description || "",
+        status: taskData?.status || "todo",
+        priority: taskData?.priority || "medium",
+        dueDate: taskData?.dueDate ? new Date(taskData.dueDate) : "",
+      });
+    } else {
+      reset({
+        title: "",
+        description: "",
+        status: "todo",
+        priority: "medium",
+        dueDate: "",
+      });
+    }
+  }, [taskId, isEdit]);
+
   const handleSubmit = () => {
     const payload = {
       ...form,
@@ -84,21 +115,35 @@ const AddTaskDialog = () => {
 
     setIsLoading(true);
 
-    dispatch(addTask(payload))
-      .then((res) => {
-        setIsLoading(false);
-        dispatch(closeAddTaskDialog());
-      })
-      .catch((err) => {
-        setIsLoading(false);
-      });
+    if (isEdit) {
+      dispatch(updateTask({ taskId, payload }))
+        .then((res) => {
+          setIsLoading(false);
+          dispatch(closeAddTaskDialog());
+        })
+        .catch((err) => {
+          setIsLoading(false);
+        });
+    } else {
+      dispatch(addTask(payload))
+        .then((res) => {
+          setIsLoading(false);
+          dispatch(closeAddTaskDialog());
+        })
+        .catch((err) => {
+          setIsLoading(false);
+        });
+    }
   };
 
   return (
     <Drawer
       open={addTaskDialog?.open}
       onOpenChange={(open) => {
-        if (!open) dispatch(closeAddTaskDialog());
+        if (!open) {
+          dispatch(closeAddTaskDialog());
+          navigate("/home");
+        }
       }}
       key={"right"}
       direction={"right"}
@@ -114,7 +159,11 @@ const AddTaskDialog = () => {
       </DrawerTrigger>
       <DrawerContent className="data-[vaul-drawer-direction=bottom]:max-h-[50vh] data-[vaul-drawer-direction=top]:max-h-[50vh] bg-white">
         <DrawerHeader>
-          <DrawerTitle>New Task</DrawerTitle>
+          {isEdit ? (
+            <DrawerTitle>Edit Task</DrawerTitle>
+          ) : (
+            <DrawerTitle>New Task</DrawerTitle>
+          )}
         </DrawerHeader>
         <div className="no-scrollbar overflow-y-auto px-4 flex flex-col gap-y-6">
           <div className="flex flex-col justify-start items-start w-full">

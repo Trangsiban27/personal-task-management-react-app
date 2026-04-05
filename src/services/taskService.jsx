@@ -55,4 +55,14 @@ export const taskService = {
       console.log("err: ", err);
     }
   },
+
+  updateTask: async (taskId, payload) => {
+    try {
+      const res = await apiClient.patch(`/task/${taskId}`, payload);
+
+      return res?.data;
+    } catch (err) {
+      console.log("err: ", err);
+    }
+  },
 };
