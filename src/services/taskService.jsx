@@ -33,4 +33,14 @@ export const taskService = {
       console.log("err: ", err);
     }
   },
+
+  getTask: async (taskId) => {
+    try {
+      const res = await apiClient.get(`/task/${taskId}`);
+
+      return res?.data;
+    } catch (err) {
+      console.log("err: ", err);
+    }
+  },
 };

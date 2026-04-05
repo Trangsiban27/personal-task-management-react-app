@@ -40,6 +40,19 @@ export const addTask = createAsyncThunk(
     }
 )
 
+export const getTask = createAsyncThunk(
+    'task/getTask',
+    async (taskId) => {
+        try {
+            const res = await taskService.getTask(taskId)
+
+            return res
+        } catch (err) {
+            console.log('err: ', err)
+        }
+    }
+)
+
 const taskSlice = createSlice({
     name: 'task',
     initialState: {
@@ -50,6 +63,10 @@ const taskSlice = createSlice({
             done: []
         },
         addTaskDialog: {
+            open: false
+        },
+        task: {
+            data: null,
             open: false
         }
     },
@@ -62,6 +79,12 @@ const taskSlice = createSlice({
         },
         closeAddTaskDialog: (state, action) => {
             state.addTaskDialog.open = false
+        },
+        openTaskDialog: (state, action) => {
+            state.task.open = true
+        },
+        closeTaskDialog: (state, action) => {
+            state.task.open = false
         }
     },
     extraReducers: (builder) => {
@@ -81,12 +104,23 @@ const taskSlice = createSlice({
             state.tasks.push(newTask)
             state.items[newTask.status].push(newTask)
         })
+        builder.addCase(getTask.fulfilled, (state, action) => {
+            state.task.data = action.payload?.metadata
+        })
     }
 })
 
 export const selectItems = (state) => state.tasks.items
 export const selectAddTaskDialog = (state) => state.tasks.addTaskDialog
+export const selectTaskDetailDialog = (state) => state.tasks.task
+export const selectTaskData = (state) => state.tasks.task.data
 
-export const { setItem, openAddTaskDialog, closeAddTaskDialog } = taskSlice.actions
+export const {
+    setItem,
+    openAddTaskDialog,
+    closeAddTaskDialog,
+    openTaskDialog,
+    closeTaskDialog
+} = taskSlice.actions
 
 export default taskSlice.reducer

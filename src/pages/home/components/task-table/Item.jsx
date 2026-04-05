@@ -2,8 +2,13 @@ import React from "react";
 import { useDraggable } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
 import { formatDate } from "@/utils/formatDate";
+import { useDispatch } from "react-redux";
+import { openTaskDialog } from "@/slices/taskSlice";
+import { useNavigate } from "react-router-dom";
 
 const Item = ({ id, data, index, column }) => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
     id: id,
   });
@@ -19,6 +24,9 @@ const Item = ({ id, data, index, column }) => {
       className="flex flex-col items-start gap-y-2 border border-gray-300 rounded-lg p-4 cursor-pointer"
       ref={setNodeRef}
       style={style}
+      onClick={() => {
+        navigate(`/home?task=${id}`, { replace: true });
+      }}
     >
       <div className="flex flex-col items-start">
         <span className="font-semibold">{data?.title}</span>

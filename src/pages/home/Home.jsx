@@ -2,6 +2,7 @@ import React from "react";
 import ProjectStatistics from "./components/ProjectStatistics";
 import ProgressTask from "./components/ProgressTask";
 import TaskTable from "./components/task-table/TaskTable";
+import TaskDetailPanel from "@/components/task/TaskDetailPanel";
 
 const Home = () => {
   return (
@@ -23,6 +24,8 @@ const Home = () => {
       <div className="">
         <TaskTable />
       </div>
+
+      <TaskDetailPanel />
     </div>
   );
 };

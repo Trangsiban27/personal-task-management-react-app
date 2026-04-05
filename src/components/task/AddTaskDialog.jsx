@@ -131,7 +131,7 @@ const AddTaskDialog = () => {
                     onValueChange={(value) => field.onChange(value)}
                   >
                     <SelectTrigger className="w-full max-w-48">
-                      <SelectValue placeholder="Select a fruit" />
+                      <SelectValue placeholder="Select a status" />
                     </SelectTrigger>
                     <SelectContent className={"bg-white"}>
                       <SelectGroup>
@@ -163,7 +163,7 @@ const AddTaskDialog = () => {
                     onValueChange={(value) => field.onChange(value)}
                   >
                     <SelectTrigger className="w-full max-w-48">
-                      <SelectValue placeholder="Select a fruit" />
+                      <SelectValue placeholder="Select a priority" />
                     </SelectTrigger>
                     <SelectContent className={"bg-white"}>
                       <SelectGroup>

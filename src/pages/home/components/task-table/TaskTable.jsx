@@ -1,21 +1,46 @@
 import React, { act, useEffect, useState } from "react";
 import Column from "./Column";
 import Item from "./Item";
-import { closestCorners, DndContext } from "@dnd-kit/core";
+import {
+  closestCorners,
+  DndContext,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getTasks,
+  openTaskDialog,
   selectItems,
   setItem,
   updateTaskStatus,
 } from "@/slices/taskSlice";
 import { arrayMove } from "@dnd-kit/sortable";
+import { useSearchParams } from "react-router-dom";
 
 const TaskTable = () => {
   const dispatch = useDispatch();
   const tasksData = useSelector(selectItems);
+  const [searchParams] = useSearchParams();
 
   const [currentTask, setCurrentTask] = useState(null);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 5,
+      },
+    }),
+  );
+
+  const taskId = searchParams.get("task");
+
+  useEffect(() => {
+    if (taskId) {
+      dispatch(openTaskDialog());
+    }
+  }, [taskId]);
 
   useEffect(() => {
     dispatch(getTasks({ limit: 10, page: 1 }));
@@ -101,6 +126,7 @@ const TaskTable = () => {
 
   return (
     <DndContext
+      sensors={sensors}
       collisionDetection={closestCorners}
       onDragOver={handleDragOver}
       onDragEnd={handleDragEnd}
