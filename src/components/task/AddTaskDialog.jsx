@@ -59,7 +59,7 @@ const AddTaskDialog = () => {
   const {
     control,
     watch,
-    formState: { errors },
+    formState: { errors, isValid },
   } = useForm({
     mode: "onChange",
     resolver: yupResolver(schema),
@@ -287,6 +287,7 @@ const AddTaskDialog = () => {
             variant="default"
             className={"bg-black w-full text-white mt-6 py-6 cursor-pointer"}
             loading={isLoading}
+            disabled={isLoading || !isValid}
           >
             Submit
           </LoadingButton>
