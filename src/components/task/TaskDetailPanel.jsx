@@ -7,6 +7,7 @@ import {
   openTaskDialog,
   selectTaskData,
   selectTaskDetailDialog,
+  updateTaskPriority,
   updateTaskStatus,
 } from "@/slices/taskSlice";
 import { useNavigate, useSearchParams } from "react-router-dom";
@@ -55,6 +56,15 @@ const TaskDetailPanel = () => {
       updateTaskStatus({
         taskId: taskData?._id,
         status: value,
+      }),
+    );
+  };
+
+  const handleChangePriority = (value) => {
+    dispatch(
+      updateTaskPriority({
+        taskId: taskData?._id,
+        priority: value,
       }),
     );
   };
@@ -124,7 +134,10 @@ const TaskDetailPanel = () => {
                 </FieldLabel>
                 <Select
                   value={taskData?.priority}
-                  onValueChange={(value) => setPriority(value)}
+                  onValueChange={(value) => {
+                    setPriority(value);
+                    handleChangePriority(value);
+                  }}
                 >
                   <SelectTrigger className="w-full max-w-48">
                     <SelectValue placeholder="Select a priority" />

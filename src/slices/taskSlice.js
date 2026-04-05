@@ -53,6 +53,19 @@ export const getTask = createAsyncThunk(
     }
 )
 
+export const updateTaskPriority = createAsyncThunk(
+    'task/updateTaskPriority',
+    async (payload) => {
+        try {
+            const res = await taskService.updateTaskPriority(payload?.taskId, payload?.priority)
+
+            return res
+        } catch (err) {
+            console.log('err: ', err)
+        }
+    }
+)
+
 const taskSlice = createSlice({
     name: 'task',
     initialState: {
@@ -120,6 +133,11 @@ const taskSlice = createSlice({
             }
 
             state.task.data.status = newStatus
+        })
+        builder.addCase(updateTaskPriority.fulfilled, (state, action) => {
+            const newPriority = action?.payload?.metadata?.priority
+
+            state.task.data.priority = newPriority
         })
     }
 })

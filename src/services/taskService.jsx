@@ -43,4 +43,16 @@ export const taskService = {
       console.log("err: ", err);
     }
   },
+
+  updateTaskPriority: async (taskId, priority) => {
+    try {
+      const res = await apiClient.patch(`/task/${taskId}/priority`, {
+        priority,
+      });
+
+      return res?.data;
+    } catch (err) {
+      console.log("err: ", err);
+    }
+  },
 };
