@@ -3,6 +3,7 @@ import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { formatUppercaseFirstLetter } from "@/utils/formatText";
 import { useDroppable } from "@dnd-kit/core";
+import AddTaskDialog from "@/components/task/AddTaskDialog";
 
 const Column = ({ children, id }) => {
   const { isOver, setNodeRef } = useDroppable({
@@ -25,14 +26,15 @@ const Column = ({ children, id }) => {
           {formatUppercaseFirstLetter(id)}
         </h4>
 
-        <Button
+        {/* <Button
           variant="ghost"
           size="icon"
           aria-label="Add Task"
           className={"cursor-pointer"}
         >
           <Plus size={12} />
-        </Button>
+        </Button> */}
+        <AddTaskDialog />
       </div>
 
       {children}

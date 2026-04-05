@@ -23,4 +23,14 @@ export const taskService = {
       console.log("err: ", err);
     }
   },
+
+  addTask: async (payload) => {
+    try {
+      const res = await apiClient.post("/task", payload);
+
+      return res?.data;
+    } catch (err) {
+      console.log("err: ", err);
+    }
+  },
 };

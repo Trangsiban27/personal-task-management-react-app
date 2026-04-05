@@ -27,6 +27,19 @@ export const updateTaskStatus = createAsyncThunk(
     }
 )
 
+export const addTask = createAsyncThunk(
+    'task/addTask',
+    async (payload) => {
+        try {
+            const res = await taskService.addTask(payload)
+
+            return res
+        } catch (err) {
+            console.log('err: ', err)
+        }
+    }
+)
+
 const taskSlice = createSlice({
     name: 'task',
     initialState: {
@@ -36,10 +49,19 @@ const taskSlice = createSlice({
             inProgress: [],
             done: []
         },
+        addTaskDialog: {
+            open: false
+        }
     },
     reducers: {
         setItem: (state, action) => {
             state.items = action.payload
+        },
+        openAddTaskDialog: (state, action) => {
+            state.addTaskDialog.open = true
+        },
+        closeAddTaskDialog: (state, action) => {
+            state.addTaskDialog.open = false
         }
     },
     extraReducers: (builder) => {
@@ -52,11 +74,19 @@ const taskSlice = createSlice({
                 state?.items[status].push(task)
             })
         })
+        builder.addCase(addTask.fulfilled, (state, action) => {
+            console.log('res: ', action.payload)
+            const newTask = action.payload?.metadata
+
+            state.tasks.push(newTask)
+            state.items[newTask.status].push(newTask)
+        })
     }
 })
 
 export const selectItems = (state) => state.tasks.items
+export const selectAddTaskDialog = (state) => state.tasks.addTaskDialog
 
-export const { setItem } = taskSlice.actions
+export const { setItem, openAddTaskDialog, closeAddTaskDialog } = taskSlice.actions
 
 export default taskSlice.reducer
