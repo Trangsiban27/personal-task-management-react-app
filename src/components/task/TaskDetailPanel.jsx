@@ -84,7 +84,9 @@ const TaskDetailPanel = () => {
     >
       <DrawerContent className="data-[vaul-drawer-direction=bottom]:max-h-[50vh] data-[vaul-drawer-direction=top]:max-h-[50vh] bg-white">
         <div className="flex items-center justify-between gap-2 p-4 border-b border-gray-500">
-          <DrawerTitle className="mb-0">{taskData?.title}</DrawerTitle>
+          <DrawerTitle className="mb-0 text-ellipsis overflow-hidden">
+            {taskData?.title}
+          </DrawerTitle>
           <Button
             variant="ghost"
             size="icon"
@@ -92,7 +94,6 @@ const TaskDetailPanel = () => {
             onClick={() => {
               navigate(`/home?task=${taskData?._id}&isEdit=true`);
               dispatch(closeTaskDialog());
-              dispatch(openAddTaskDialog());
             }}
           >
             <EditIcon size={18} />

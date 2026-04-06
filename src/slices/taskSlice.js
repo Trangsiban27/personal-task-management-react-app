@@ -155,6 +155,20 @@ const taskSlice = createSlice({
 
             state.task.data.priority = newPriority
         })
+        builder.addCase(updateTask.fulfilled, (state, action) => {
+            const updateTask = action?.payload?.metadata
+
+            const taskIndex = state.tasks.findIndex(task => task?._id === updateTask?._id)
+            const taskItemsIndex = state.items[updateTask?.status]?.findIndex(task => task?._id === updateTask?._id)
+
+            if (taskItemsIndex !== -1) {
+                state.items[updateTask?.status][taskItemsIndex] = updateTask
+            }
+
+            if (taskIndex !== -1) {
+                state.tasks[taskIndex] = updateTask
+            }
+        })
     }
 })
 

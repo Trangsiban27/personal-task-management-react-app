@@ -89,6 +89,7 @@ const AddTaskDialog = () => {
 
   useEffect(() => {
     if (isEdit && taskId) {
+      dispatch(openAddTaskDialog());
       reset({
         title: taskData?.title || "",
         description: taskData?.description || "",
@@ -120,6 +121,7 @@ const AddTaskDialog = () => {
         .then((res) => {
           setIsLoading(false);
           dispatch(closeAddTaskDialog());
+          navigate(`/home`);
         })
         .catch((err) => {
           setIsLoading(false);
@@ -129,6 +131,7 @@ const AddTaskDialog = () => {
         .then((res) => {
           setIsLoading(false);
           dispatch(closeAddTaskDialog());
+          navigate(`/home`);
         })
         .catch((err) => {
           setIsLoading(false);
